@@ -1,6 +1,7 @@
 using System.Data;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
 using Payment.Application.Common.Interfaces;
 using Payment.Domain.Entities;
@@ -18,7 +19,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.ConfigureWarnings(c =>
+        {
+            c.Ignore(RelationalEventId.PendingModelChangesWarning);
+        });
+    }
+
     public IDbTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
     {
         var transaction = Database.BeginTransaction(isolationLevel);

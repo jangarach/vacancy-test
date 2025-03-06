@@ -15,16 +15,6 @@ public static class ResultExtensions
         return result.CreateProblem();
     }
     
-    public static Results<Ok<T>, ProblemHttpResult> CreateResponse<T>(this Result<T>  result)
-    {
-        if (result.IsSuccess)
-        {
-            return TypedResults.Ok(result.Value);
-        }
-
-        return result.CreateProblem();
-    }
-    
     public static ProblemHttpResult CreateProblem(this Result result)
     {
         var statusCode = result.Error!.Type switch
